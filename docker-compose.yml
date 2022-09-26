@@ -1,0 +1,243 @@
+version: '3'
+
+services:
+  shop: &shop
+    container_name: shop
+    build:
+      context: .
+      dockerfile: docker/shop/Dockerfile
+    expose:
+      - 5001
+    env_file:
+      - shop/shop.env
+    networks:
+      - shop_db_net
+      - nginx_network
+      - store_shop_network
+    depends_on:
+      - db_shop
+    volumes:
+      - ./shop:/app
+    command:
+      - sh run.sh
+
+  store:
+    container_name: store
+    build:
+      context: .
+      dockerfile: docker/store/Dockerfile
+    expose:
+      - 5002
+    networks:
+      - store_db_net
+      - nginx_network
+      - mail_network
+      - store_shop_network
+    depends_on:
+      - db_store
+    volumes:
+      - ./store:/app
+    command:
+      - sh run.sh
+
+  db_shop:
+    container_name: db_shop
+    hostname: shop_postgres
+    image: postgres:14.2
+    expose:
+      - 5432
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: admin
+      POSTGRES_DB: db_shop
+    volumes:
+      - postgres_shop_data:/var/lib/postgresql/data
+    restart: unless-stopped
+    networks:
+      - shop_db_net
+
+  db_store:
+    container_name: db_store
+    hostname: store_postgres
+    image: postgres:14.2
+    expose:
+      - 5432
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: admin
+      POSTGRES_DB: db_store
+    volumes:
+      - postgres_store_data:/var/lib/postgresql/data
+    restart: unless-stopped
+    networks:
+      - store_db_net
+
+  pgadmin:
+    container_name: pgadmin
+    image: dpage/pgadmin4
+    depends_on:
+      - db_shop
+      - db_store
+    ports:
+      - 5050:80
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@noreply.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+    restart: unless-stopped
+    networks:
+      - shop_db_net
+      - store_db_net
+
+  redis:
+    container_name: redis
+    image: redis:6.2.6
+    restart: on-failure
+    networks:
+      - shop_db_net
+    expose:
+      - 6379
+    volumes:
+      - redis_data:/var/lib/redis/data
+    healthcheck:
+      test: [ "CMD", "redis-cli", "-h", "localhost", "ping" ]
+
+  rabbitmq:
+    container_name: rabbitmq
+    image: rabbitmq:3.9.14
+    restart: on-failure
+    networks:
+      - shop_db_net
+    expose:
+      - 4369
+      - 5671
+      - 5672
+      - 15672
+      - 25672
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+    healthcheck:
+      test: [ "CMD", "nc", "-z", "localhost", "5672" ]
+      interval: 5s
+      timeout: 15s
+      retries: 1
+
+  celery:
+    build:
+      context: .
+      dockerfile: docker/shop/Dockerfile
+    container_name: celery
+    restart: on-failure
+    depends_on:
+      - rabbitmq
+      - redis
+      - db_shop
+      - db_store
+    networks:
+      - shop_db_net
+      - store_db_net
+      - mail_network
+    environment:
+      REDIS_URL: 'redis://redis:6379/0'
+      REDIS_CACHE: 'redis:6379'
+      AMQP_URL: 'amqp://rabbitmq:5672'
+    healthcheck:
+      test: [ "CMD-SHELL", "ps ax", "|" ,"grep -v grep", "|" ,"grep celery",  "||", "exit 1" ]
+      interval: 1m
+      timeout: 5s
+      retries: 2
+    command: celery -A celery_worker.celery worker -l INFO
+
+  celery_beat:
+    build:
+      context: .
+      dockerfile: docker/shop/Dockerfile
+    container_name: celery_beat
+    restart: on-failure
+    depends_on:
+      - rabbitmq
+      - redis
+      - db_shop
+      - db_store
+    networks:
+      - shop_db_net
+      - store_db_net
+      - mail_network
+    environment:
+      REDIS_URL: 'redis://redis:6379/0'
+      REDIS_CACHE: 'redis:6379'
+      AMQP_URL: 'amqp://rabbitmq:5672'
+    healthcheck:
+      test: [ "CMD-SHELL", "ps ax", "|" ,"grep -v grep", "|" ,"grep celery",  "||", "exit 1" ]
+      interval: 1m
+      timeout: 5s
+      retries: 2
+    command: celery -A celery_worker.celery beat -l INFO
+
+  flower:
+    image: mher/flower:0.9.5
+    container_name: flower
+    networks:
+      - nginx_network
+      - shop_db_net
+    expose:
+      - 5555
+    depends_on:
+      - celery
+      - redis
+    command: [ "--app core", "--port=5555", "--url_prefix=flower", "--broker=amqp://rabbitmq:5672", "--broker_api=amqp://rabbitmq:15672//" ]
+
+  mailhog:
+    container_name: mailhog
+    image: mailhog/mailhog:latest
+    command: [ "-smtp-bind-addr", "0.0.0.0:25" ]
+    user: root
+    restart: on-failure
+    networks:
+      - nginx_network
+      - mail_network
+    expose:
+      - 25
+      - 8025
+    healthcheck:
+      test: [ "CMD", "echo", "|", "telnet", "127.0.0.1 25" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  nginx:
+    container_name: nginx
+    build:
+      context: .
+      dockerfile: ./docker/nginx/Dockerfile
+    restart: on-failure
+    networks:
+      - nginx_network
+    ports:
+      - 80:80
+      - 81:81
+      - 8025:8025
+      - 5555:5555
+    depends_on:
+      - shop
+      - store
+      - mailhog
+      - flower
+    healthcheck:
+      test: [ "CMD-SHELL", "ps ax", "|" ,"grep -v grep", "|" ,"grep nginx",  "||", "exit 1" ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+
+networks:
+  shop_db_net:
+  store_db_net:
+  nginx_network:
+  store_shop_network:
+  mail_network:
+
+volumes:
+  postgres_shop_data:
+  postgres_store_data:
+  redis_data:
+  rabbitmq_data:
