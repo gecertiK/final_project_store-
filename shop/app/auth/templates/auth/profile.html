@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% block title %}
+    {{ current_user }} - profile
+{% endblock %}
+{% block content %}
+    <div class="profile-data-block">
+        {% include 'auth/markup_components/profile_block.html' %}
+    </div>
+    <div class="d-flex justify-content-center orders-block">
+        {% include 'auth/markup_components/orders_block.html' %}
+    </div>
+    {% if orders.pages > 1 %}
+        {{ paginate(books) }}
+    {% endif %}
+{% endblock %}

@@ -1,0 +1,26 @@
+<div class="col-md-{% if book.id in last_books_ids %}{% if last_books_ids|length == 1 %}12{% else %}6{% endif %}{% else %}4{% endif %}">
+    <div class="row g-0 border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
+        <div class="col p-4 d-flex flex-column position-static">
+            <h3 class="mb-0">{{ book.title|truncate(23) }}</h3>
+            <p class="card-text mb-auto">{{ book.summary|truncate(32) }}</p>
+            <div class="d-flex justify-content-around read-more-basket">
+                <a href="{{ book.get_absolute_url() }}" class="center">
+                    <button class="btn btn-info mt-3">read more</button>
+                </a>
+                <div class="basket-button" data-url="{{ url_for("main.add_to_basket", id=book.id) }}">
+                    <form class="add-to-basket" action="{{ url_for('main.add_to_basket') }}?next={{ url_for('main.index') }}" method="POST">
+                        <input type="hidden" value="{{ csrf_token }}">
+                        <input type="hidden" name="item" value="{{ book.id }}">
+                        <button class="btn btn-success mt-3" type="submit"><img src="{{ url_for('static', filename='img/basket_48.png') }}" alt=""></button>
+                    </form>
+                </div>
+{#                <div class="basket-button add-to-basket">#}
+{#                        <button class="btn btn-success mt-3" type="button" value="{{ book.id }}"><img src="{{ url_for('static', filename='img/basket_48.png') }}" alt=""></button>#}
+{#                </div>#}
+            </div>
+        </div>
+        <div class="col-auto d-none d-lg-block">
+            <img src="" alt="">
+        </div>
+    </div>
+</div>

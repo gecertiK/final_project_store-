@@ -1,0 +1,16 @@
+<div>
+    <h3>{{ author }}</h3>
+    <p>Date of birth: {{ author.date_of_birth }}</p>
+    {% if author.date_of_death %}
+        <p>Date of death: {{ author.day_of_death }}</p>
+    {% endif %}
+    {% if author.books %}
+        <ul>
+            {% for book in author.books %}
+                <li><a href="{{ book.get_absolute_url() }}">{{ book }}</a></li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p> Book list is empty</p>
+    {% endif %}
+</div>

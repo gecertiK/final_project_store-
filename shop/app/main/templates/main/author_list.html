@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+{% from "macros/_pagination_macros.html" import paginate %}
+
+{% block title %}
+    Author List
+{% endblock %}
+{% block content %}
+    {% for author in authors.items %}
+        {% include 'main/components/author_intro_component.html' %}
+    {% endfor %}
+    {{ paginate(authors) }}
+{% endblock %}

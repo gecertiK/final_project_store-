@@ -1,0 +1,10 @@
+<div class="bg-info">
+    <h4>id: {{ order.id }}</h4>
+    <p>date: {{ order.order_date }}</p>
+    <ul>
+        <h5>Books:</h5>
+            {% for book in order.books %}
+                <li>{{ book.title }}</li>
+            {% endfor %}
+    </ul>
+</div>

@@ -1,0 +1,28 @@
+<header class="p-3 bg-dark text-white">
+    <navbar>
+        <div class="container">
+            <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
+                <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
+                    <li><a href="{{ url_for('main.index') }}" class="nav-link px-2 text-white {% if home %}active{% endif %}" {% if home %}aria-current="page"{% endif %}>Books</a></li>
+                    <li><a href="{{ url_for('main.authors_list') }}" class="nav-link px-2 text-white {% if authors %}active{% endif %}" {% if authors %}aria-current="page"{% endif %}>Authors</a></li>              <li><a href="#" class="nav-link px-2 text-white{% if dummy2 %}active{% endif %}" {% if dummy2 %}aria-current="page"{% endif %}>Pricing</a></li>
+                    <li><a href="#" class="nav-link px-2 text-white{% if dummy3 %}active{% endif %}" {% if dummy3 %}aria-current="page"{% endif %}>About</a></li>
+                </ul>
+                <form class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3 d-flex flex-column" method="get" action="{{ url_for('main.books_filter') }}">
+                    <input type="search" class="form-control form-control-dark search-book" placeholder="Search..." aria-label="Search">
+                    <div class="filtered-books">
+
+                    </div>
+                </form>
+                <div class="text-end d-flex">
+                    {% if current_user.is_authenticated %}
+                        <a class="nav-link {% if user_page %}active{% endif %} mr-5 text-white"{% if user_page %}aria-current="page"{% endif %} href="{{ url_for('auth.profile') }}">{{ current_user.username }}</a>
+                        <a href="{{ url_for('auth.logout') }}"><button type="button" class="btn btn-outline-light me-2" id="log-out-button">Logout</button></a>
+                    {% else %}
+                        <button type="button" class="btn btn-outline-light me-2" id="log-in-button" data-url="{{ url_for('auth.login') }}">Login</button>
+                        <button type="button" class="btn btn-warning" id="sign-up-button" data-url="{{ url_for('auth.registration') }}">Sign up</button>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </navbar>
+</header>

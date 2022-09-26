@@ -1,0 +1,11 @@
+{% if basket and current_user.is_authenticated %}
+    <div class="shopping-cart-button {% if show_basket %}fade{% else %}show{% endif %}" data-url="{{ url_for('main.pay_order') }}">
+    <button class="bg-none border-none"><img src="{{ url_for('static', filename='img/shopping_cart_50.png') }}" alt=""></button>
+</div>
+    <div class="basket-active {% if show_basket %}show{% else %}fade{% endif %}">
+
+        {% include 'main/forms/basket_form.html' %}
+</div>
+
+{% endif %}
+

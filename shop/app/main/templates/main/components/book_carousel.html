@@ -1,0 +1,65 @@
+<div id="myCarousel" class="carousel slide" data-bs-ride="carousel">
+    <div class="carousel-indicators">
+        <button type="button" data-bs-target="#myCarousel" data-bs-slide-to="0" class="" aria-label="Slide 1"></button>
+        <button type="button" data-bs-target="#myCarousel" data-bs-slide-to="1" aria-label="Slide 2" class="active" aria-current="true"></button>
+        <button type="button" data-bs-target="#myCarousel" data-bs-slide-to="2" aria-label="Slide 3" class=""></button>
+    </div>
+    <div class="carousel-inner">
+        <div class="carousel-item">
+        <svg class="bd-placeholder-img" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" preserveAspectRatio="xMidYMid slice" focusable="false"><rect width="100%" height="100%" fill="#21242800"></rect></svg>
+        <div class="container">
+            <div class="carousel-caption text-start">
+                <strong class="d-inline-block mb-2">
+                {% for author in carved_books[0].authors %}
+                    <a href="{{ author.get_absolute_url() }}" class="text-{{ author.colored_name() }}">{{ author }}</a>
+                {% endfor %}
+                </strong>
+                <a href="{{ carved_books[0].get_absolute_url() }}" class="text-decoration-none">
+                    <h4 class="text-danger">{{ carved_books[0].title|truncate(55) }}</h4>
+                    <p class="text-light">{{ carved_books[0].summary|truncate(65) }}</p>
+                </a>
+            </div>
+        </div>
+    </div>
+    <div class="carousel-item active">
+    <svg class="bd-placeholder-img" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" preserveAspectRatio="xMidYMid slice" focusable="false"><rect width="100%" height="100%" fill="#21242800"></rect></svg>
+    <div class="container">
+        <div class="carousel-caption">
+            <strong class="d-inline-block mb-2">
+            {% for author in carved_books[1].authors %}
+                <a href="{{ author.get_absolute_url() }}" class="text-{{ author.colored_name() }}">{{ author }}</a>
+            {% endfor %}
+            </strong>
+            <a href="{{ carved_books[1].get_absolute_url() }}" class="text-decoration-none">
+                <h4 class="text-danger">{{ carved_books[1].title|truncate(55) }}</h4>
+                <p class="text-light">{{ carved_books[1].summary|truncate(65) }}</p>
+            </a>
+        </div>
+    </div>
+</div>
+<div class="carousel-item">
+        <svg class="bd-placeholder-img" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" preserveAspectRatio="xMidYMid slice" focusable="false"><rect width="100%" height="100%" fill="#21242800"></rect></svg>
+        <div class="container">
+            <div class="carousel-caption text-end">
+                <strong class="d-inline-block mb-2">
+                {% for author in carved_books[2].authors %}
+                    <a href="{{ author.get_absolute_url() }}" class="text-{{ author.colored_name() }}">{{ author }}</a>
+                {% endfor %}
+                </strong>
+                <a href="{{ carved_books[2].get_absolute_url() }}" class="text-decoration-none">
+                    <h4 class="text-danger">{{ carved_books[2].title|truncate(55) }}</h4>
+                    <p class="text-light">{{ carved_books[2].summary|truncate(65) }}</p>
+                </a>
+            </div>
+        </div>
+    </div>
+<button class="carousel-control-prev" type="button" data-bs-target="#myCarousel" data-bs-slide="prev">
+<span class="carousel-control-prev-icon" aria-hidden="true"></span>
+<span class="visually-hidden">Previous</span>
+</button>
+<button class="carousel-control-next" type="button" data-bs-target="#myCarousel" data-bs-slide="next">
+<span class="carousel-control-next-icon" aria-hidden="true"></span>
+<span class="visually-hidden">Next</span>
+</button>
+</div>
+</div>
