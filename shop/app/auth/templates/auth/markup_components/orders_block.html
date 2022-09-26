@@ -1,0 +1,35 @@
+{% if orders.items %}
+    <table class="order-table">
+    <thead>
+        <tr>
+            <td>id</td>
+            <td>date</td>
+            <td>books</td>
+            <td>price</td>
+        </tr>
+    </thead>
+    <tbody>
+        {% for order in orders.items %}
+            <tr class="order-detail-button" data-url="{{ url_for('main.order_detail', id=order.id) }}">
+                <td>{{ order.id }}</td>
+                <td>{{ order.get_formatted_date() }}</td>
+                <td class="d-flex justify-content-around">
+                    {% for book in order.get_ordered_books_profile() %}
+                        <div class="container">
+                            <a href="{{ book.get_absolute_url() }}">{{ book.title|truncate(10) }}</a>
+                            {{ orders_books[order.id][book.id] }}
+                        </div>
+                    {% endfor %}
+                    {% if order.get_ordered_books_profile()|length > 5%}
+                        ...
+                    {% endif %}
+                </td>
+                <td>{{ order.price }}</td>
+            </tr>
+        {% endfor %}
+    </tbody>
+    </table>
+
+{% else %}
+    <p>Your orders list is empty :(</p>
+{% endif %}

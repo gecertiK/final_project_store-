@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% from "macros/_pagination_macros.html" import paginate %}
+
+{% block title %}
+    Index Page
+{% endblock %}
+{% block content %}
+    {% if carved_books %}
+        {% include 'main/components/book_carousel.html' %}
+    {% endif %}
+    {% if books.items %}
+        <div class="row mb-2 mt-1 d-flex justify-content-between flex-wrap">
+            {% for book in books.items %}
+                {% include 'main/components/book_intro_component.html' %}
+            {% endfor %}
+        </div>
+    {% else %}
+        <p>Oosp... Looks like it's empty yet</p>
+    {% endif %}
+
+    {% if books.pages > 1 %}
+        {{ paginate(books) }}
+    {% endif %}
+{% endblock %}

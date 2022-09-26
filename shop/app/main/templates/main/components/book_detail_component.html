@@ -1,0 +1,18 @@
+<div class="book-detail">
+    <h3>{{ book.title }}</h3>
+    <p>ISBN: {{ book.isbn }}</p>
+    <p>Price: {{ book.price }}</p>
+    <div class="basket-button" data-url="{{ url_for("main.add_to_basket", id=book.id) }}">
+                    <form class="add-to-basket" action="{{ url_for('main.add_to_basket') }}?next={{ url_for('main.book_detail', isbn=book.isbn) }}" method="POST">
+                        <input type="hidden" value="{{ csrf_token }}">
+                        <input type="hidden" name="item" value="{{ book.id }}">
+                        <button class="btn btn-warning mt-3" style="width: auto;!important; height: auto;!important;" type="submit">Add to basket</button>
+                    </form>
+                </div>
+    <ul>
+        {% for author in book.authors %}
+            <li class="d-flex justify-content-center"><a href="{{ author.get_absolute_url() }}">{{ author }}</a></li>
+        {% endfor %}
+    </ul>
+    <p>{{ book.summary }}</p>
+</div>

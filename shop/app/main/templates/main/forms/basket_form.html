@@ -1,0 +1,48 @@
+    <div class="basket-form">
+<div class=" d-flex justify-content-between m-3">
+    <h4>Offers list</h4>
+    <button class="btn btn-warning exit-button">Close</button>
+</div>
+<hr>
+<form action="{{ url_for('main.pay_order') }}" method="POST" class="pay-order-form" id="pay-order-form">
+    <input type="hidden" value="{{ csrf_token }}">
+
+    <div class="shopping-cart-content order-book-list">
+        {% for order_book in basket %}
+            <div class="">
+                <div class="row d-flex justify-content-around shopping-cart-input">
+                    <label for="{{ order_book.id }}">{{ order_book.title|truncate(32) }}</label>
+                    <div class="calc d-flex">
+                        <input type="number" name="{{ order_book.id }}" id="{{ order_book.id }}" value="1" class="books-count" min="0" max="{{ order_book.count }}">
+                        <p class="mx-1"> x </p>
+                        <p>{{ order_book.price }}</p>
+                        <p class="mx-1"> = </p>
+                        <p class="one-book-summ">{{ order_book.price }}</p>
+                    </div>
+                    <div class="delete_book">
+                        <form class="remove-from-basket" action="{{ url_for('main.delete_book_basket') }}?item={{ order_book.id }}" method="POST" id="delete-book">
+                            <input type="hidden" value="{{ csrf_token }}" form="delete-book">
+                            <input type="hidden" name="item" value="{{ order_book.id }}" form="delete-book">
+                            <button class="btn btn-danger" type="submit" form="delete-book">x</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+
+    </div>
+    <hr>
+    <div class="d-flex justify-content-center"><p class="w-25">Price: </p><p class="calculated-price w-25">{{ price }}</p></div>
+
+    <hr>
+    <div class="d-flex justify-content-around mb-4">
+{#        <form action="{{ url_for('main.clear_basket') }}?next={{ url_for('main.index') }}" method="POST">#}
+{#            <input type="hidden" value="{{ csrf_token }}">#}
+            <button class="btn btn-danger clear-basket" type="button">Clear basket</button>
+{#        </form>#}
+            <button class="btn btn-info" type="submit" form="pay-order-form">Offer</button>
+    </div>
+    <input type="hidden" value="{{ price }}" name="price" id="price" form="pay-order-form">
+
+</form>
+</div>
