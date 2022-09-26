@@ -1,0 +1,133 @@
+.test {
+    background-color: red;
+    width: 100px;
+    height: 100px;
+}
+
+#modal {
+    color: #000000;
+}
+
+#log-out-button {
+    text-decoration: none;
+    color: #ffca2c;
+}
+
+.basket-button > img{
+    max-width: 50px;
+    max-height: 50px;
+}
+
+.book-detail ul {
+    list-style: none;
+}
+
+.bg-none {
+    background: #00000000;
+}
+
+.border-none {
+    border: none;
+}
+
+.text-decoration-none {
+    text-decoration: none;
+}
+
+.basket-active {
+    position: absolute;
+    left: 70vw;
+    top: 50vh;
+    width: 500px;
+    max-height: 500px;
+    background-color: #000000;
+    border-radius: 5%;
+    border: solid 2px #3a3939;
+}
+
+
+.shopping-cart-button {
+    position: absolute;
+    top: 85%;
+    left: 85%;
+    width: 75px;
+    height: 75px;
+    border-radius: 50%;
+    background-color: #ffca2c;
+    border: solid 3px #063efc;
+}
+
+.shopping-cart-button img {
+    margin: 6px;
+}
+
+
+
+.shopping-cart-button:hover {
+    border: solid 1px #fc1b06;
+}
+
+.basket .d-flex {
+    height: 100%;
+}
+
+.shopping-cart-input label {
+    max-width: 255px;
+}
+
+.shopping-cart-input input {
+    width: 50px;
+    height: 25px;
+}
+.calc {
+    width: 175px;
+}
+
+.shopping-cart-input label {
+    color: #ffffff;
+}
+
+.order-book-list {
+    max-height: 200px;
+    max-width: 495px;
+    overflow-y: scroll;
+}
+
+.shopping-cart-input {
+    max-width: 495px;
+}
+
+.add-to-basket button {
+    width: 48px;
+    height: 48px;
+    padding: 0;!important;
+}
+
+.delete_book {
+    width: 25px;
+    height: 25px;
+}
+
+.delete_book button {
+    width: 25px;
+    height: 25px;
+    padding: 0;!important;
+}
+
+.order-table {
+    width: 75%;
+    border: solid 2px #ffffff;
+}
+
+.order-table thead {
+    font-size: 1.25em;
+    border: solid 2px #ffffff;
+}
+
+.order-table td {
+    border: solid 1px #ffffff;
+}
+
+.max-count {
+    color: #fc1b06;
+}
